@@ -1,0 +1,25 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<h2 style="text-align: center;">Your Listings</h2>
+
+{% for list in searchList %}
+{% if list.status %}
+<div style="margin: 30px;border-bottom: 3px solid black;" class="listing text-dark d-flex-column d-md-inline-flex">
+    <div class="img"><a href="{% url 'detail' list.id %}"><img src="{{ media_url }}{{ list.image }}" alt=""
+                width="300px" style="display:inline;margin-right: 10px;margin-bottom: 20px;" height="250px"></a></div>
+    <div class="descript"><b>Item Name:</b>{{ list.name }} <br><b>Current Price:</b>{{ list.current_price }} <span>
+            $</span><br>
+        <b>Owner</b>
+        {{ list.creator }}
+        <br>
+        <b>Posted on:</b>
+        {{ list.date }}
+
+    </div>
+
+</div>
+{% endif %}
+
+{% endfor %}
+{% endblock %}

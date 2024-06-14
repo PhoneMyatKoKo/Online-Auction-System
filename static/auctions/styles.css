@@ -1,0 +1,17 @@
+body {
+    padding: 10px;
+}
+
+.img{
+    margin-right: 10px;
+}
+div{
+    color: rebeccapurple;
+}
+
+.nav-link{
+    color: aliceblue;
+}
+.listing{
+    border-bottom: 3px solid black;
+}

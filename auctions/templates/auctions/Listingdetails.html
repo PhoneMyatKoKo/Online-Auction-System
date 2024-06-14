@@ -1,0 +1,156 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+<div class="container-fluid detail-listing p-3 text-light">
+    {% if not listing.status %}
+    <h2>Auction for this item is already closed.</h2>
+    {% if WinRecord.winner_id == user.pk %}
+    <h3>You won this item.</h3>
+    {% endif %}
+    {% endif %}
+    <div style="margin: 30px;" class="listing d-flex-column d-md-inline-flex">
+        <div class=""><img src="{{ media_url }}{{ listing.image }}" alt="" width="300px"
+                style="display:inline;margin-right: 10px;margin-bottom: 20px;border: 1px  solid black;" height="250px"
+                class="  ">
+        </div>
+        <div class="descript"><b>Item Name:</b>{{ listing.name }} <br><b>Current Price:</b><span class="base-price">
+                {{ listing.current_price }}</span>
+            <span>
+                $</span><br>
+            <b>Creator</b>
+            {{ listing.creator }}
+            <br>
+            <b>Latest Bid</b>
+            <span class="bidAmount">{{ BidRecord.bidAmount }}</span>
+            <div class="description" style="margin: 20px 20px 20px 40px">
+                <h3>Description</h3>
+                <p class="lead">{{ listing.description }}</p>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    {% if listing.creator_id != user.pk and user.is_authenticated and listing.status %}
+    <div class="bid text-warning" style="clear: both;text-align: center;">
+        <h4 style="">Bid must be greater than the latest bid.</h4>
+        <form action="{% url 'bidding' listing.id %}" method="post" class="bid-form" onsubmit="return validateBid()"
+            name="bid-form">
+            {% csrf_token %}
+            <input type="text" name="bid" id="" placeholder="Type ur amount here" class="bidInput">
+            <br>
+            <input type="submit" name="Bid" id="" value="Bid" class="btn btn-lg btn-danger px-3 mt-2">
+        </form>
+    </div>
+    {% elif not user.is_authenticated %}
+    <h3 style="text-align: center;">You need to sign in to bid.</h3>
+    {% endif %}
+
+
+    <div class="cmt-section  card p-5 m-2" style="width: 100%;">
+        <h2>Comments Section</h2>
+        {% for cm in comment %}
+        <div class="cmt-detail card d-md-flex  m-3 p-1 border-dark bg-dark text-light">
+            <div class="commentor " style="font-size: large;font-weight: 300;"><b>{{ cm.commentor }}</b></div>
+            : {{ cm.content }}
+            {% if cm.commentor_id == user.id %}
+            <form action="{% url 'delete_comment' cm.id %}" style="" method="post" class="mx-2">
+                {% csrf_token %}<input type="submit" name="delete" id="" class="btn btn-warning bg-secondary"
+                    value="Delete your comment">
+            </form>
+            {% endif %}
+        </div>
+        {% empty %}
+        Empty comment
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+        <div class="add-comment form-group"><button onclick="show()" class=" btn-secondary btn-lg">Add
+                Comment</button>
+            <form action=" {% url 'comment' listing.id %}" id="form-comment" style="display: none;" name="comment-form"
+                onsubmit="return validate()" method="post">
+                {% csrf_token %}
+                <Textarea name="comments" placeholder="Type your comment here..." class="form-control"></Textarea>
+                <input type="submit" name="Comment" id="">
+            </form>
+        </div>
+
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+    {% if listing.creator_id != user.pk %}
+    {% if Duplicate %}
+    <form action="{% url 'removeList' listing.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="addedListing" id="" value="{{ listing.id }}" disabled style="display: none;">
+        <input type="submit" name="" value="Remove From Watch List" class=" btn-secondary btn-lg">
+    </form>
+    {% else %}
+    <form action=" {% url 'addWatch' listing.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="addedListing" id="" value="{{ listing.id }}" disabled style="display: none;">
+        <input type="submit" name="" id="" value="Add To WatchList" class="btn btn-secondary btn-lg">
+    </form>
+    {% endif %}
+    {% endif %}
+
+    <!-- For closing auction -->
+    {% if listing.creator_id == user.id and listing.status %}
+    <div class="auction-close" style="margin-top: 20px;text-align: center;">
+        <form action="{% url 'closeAuction' listing.id %}">
+            <input type="submit" value="Close your auction" id="" class="form-group"
+                style="background-color: brown;padding: 5px;color: aliceblue;">
+        </form>
+    </div>
+    {% endif %}
+
+
+    {% endif %}
+</div>
+
+
+
+
+<script>
+    function show() {
+        var x = document.getElementById("form-comment")
+        if (x.style.display === 'none') {
+            x.style.display = 'block';
+        }
+        else {
+            x.style.display = 'none';
+        }
+    }
+
+    function validate() {
+        var x = document.forms['comment-form']['comments'].value;
+        if (x == '') {
+            alert("Comment cannot be empty.");
+            return false;
+        }
+    }
+
+    function validateBid() {
+        var x = document.forms['bid-form']['bid'].value;
+        console.log(x)
+        if (x == '') {
+            alert("Comment cannot be empty.");
+            return false;
+        }
+        NumX = parseFloat(x)
+
+        if (NumX <= parseFloat(document.getElementsByClassName("bidAmount")[0].innerHTML) || NumX < parseFloat(document.getElementsByClassName("base-price")[0].innerHTML)) {
+            alert("Bidder must be greater the latest bid.")
+            return false;
+
+
+        }
+        return true;
+
+    }
+    console.log(parseFloat(document.getElementsByClassName("base-price")[0].innerHTML))
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'auctions/layout.html' %}
+
+
+{% block body %}
+
+
+<h2 class="text-center m-2">Your WatchList: {{ user }}</h2>
+<div class="container mb-3 mt-3">
+    <div class="row m-auto mb-3">
+        {% for list in listings %}
+        <div style="border-bottom: 3px solid black;"
+            class="listing d-flex-column d-md-inline-flex col-sm-6 mb-3 mb-sm-4 card border-dark p-2 ">
+            <div class=" "><a href="{% url 'detail' list.id %}"><img src="{{ media_url }}{{ list.image }}" alt=""
+                        width="300px" style="display:inline;margin-bottom: 20px;" height="250px"
+                        class="card-img-top"></a>
+            </div>
+            <div class="descript"><b>Item Name:</b>{{ list.name }} <br><b>Current Price:</b>{{ list.current_price }}
+                <span>
+                    $</span><br>
+                <b>Creator</b>
+                {{ list.creator }}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+        <h3>No Listings in WatchList..</h3>
+
+
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

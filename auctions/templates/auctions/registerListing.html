@@ -1,0 +1,64 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+
+<div class="form p-5">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Listing Name</label>
+            <input type="text" name="name" id="" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" name="price" id="" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="descript">Description</label>
+            <textarea name="descript" id="" cols="40" rows="10" class="form-control"></textarea>
+
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select name="category" id="">
+                {% for ctg in category %}
+
+                <option value="{{ ctg.id }}">{{ ctg }}</option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="creator">Creator</label>
+            <select name="creator" id="">
+
+                <option value="{{ user.id }}">{{ user }}</option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Upload Image</label>
+            <input type="file" name="img" id="" class="form-control">
+        </div>
+        <div class="btn btn-lg">
+            <input type="submit" name="submit" id="" class="btn">
+        </div>
+
+
+
+    </form>
+    {% else %}
+    <h3>Log In First.</h3>
+
+    {% endif %}
+</div>
+
+
+{% endblock %}

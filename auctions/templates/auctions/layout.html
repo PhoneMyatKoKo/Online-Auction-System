@@ -1,0 +1,229 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}Auctions{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            margin-bottom: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        footer {
+            margin-top: auto;
+            margin-bottom: 0
+        }
+
+        .search::before {
+            display: block;
+            content: '';
+            height: 160px;
+        }
+
+        /* .cmt-section {
+            color: burlywood;
+            line-height: 50px;
+            margin: 10px 10px 10px 10px;
+            border: 5px solid brown;
+            padding: 12px;
+        } */
+
+        .cmt-section {
+            color: lightcyan;
+            background-color: rgb(4, 4, 39);
+        }
+
+        .detail-listing {
+            background-color: #800000;
+        }
+
+        .cmt-section h2 {
+            text-align: center;
+        }
+
+        .cmt-detail {
+            color: chocolate
+        }
+
+        .btn {
+            color: aliceblue;
+            background-color: brown;
+            padding: 2px 3px;
+            box-shadow: 2px red;
+            box-sizing: initial
+        }
+
+        footer {
+
+            /* clear: both; */
+            width: 100%;
+            /* height: 20%;
+            /* position: absolute*? */
+            bottom: 0px;
+
+            height: 100px;
+            top: calc(100vh - 100px);
+            background-color: brown;
+            /* clear: both; */
+
+        }
+
+        .drop-down-li {
+            width: 170px;
+            float: none;
+            display: list-item;
+            position: relative;
+            list-style: none;
+            background-color: brown;
+        }
+
+        /* Hide Dropdowns by Default */
+        .drop-down-ul {
+            display: none;
+            position: absolute;
+            top: 60px;
+            /* the height of the main nav */
+        }
+
+        /* Display Dropdowns on Hover */
+        .nav-item:hover>ul {
+            display: inherit;
+        }
+
+        .form-controls {
+            width: 50%;
+        }
+
+        .col1 {
+            width: 70%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-top text-light" style="background-color: aliceblue;">
+        <div class="h1 text-left m-2 text-dark p-2" style=" background-color: aliceblue;">
+            Auctions
+        </div>
+
+
+        <div class=" " id="nav-menu">
+            <div class="">
+                <ul class="nav "
+                    style="background-color:brown; color: aliceblue;padding: 20px;width: 100%;margin-top: 0;">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'index' %}">Active Listings</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'addList' %}">Add Listings</a>
+                    </li>
+                    <!-- {% block watchList %} -->
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'watchList' %}">Watch List: <b
+                                style="color: rgb(243, 243, 243);">
+                                {{ count }}</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'postedItems' %}">Your Items <span
+                                style="color: cadetblue;">
+                            </span></a>
+                    </li>
+
+                    <li class="nav-item drop-down">
+                        <a class="nav-link text-light" href="{% url 'wonItems' %}">Won Items <span
+                                style="color: cadetblue;">
+                            </span></a>
+                    </li>
+
+                    <li class="nav-item drop-down">
+                        <a href="#" class="nav-link text-light">Category</a>
+                        <ul class="drop-down-ul">
+                            {% for ctg in categoryListing %}
+                            <li class="drop-down-li"><a class="nav-link text-light"
+                                    href="{% url 'categoryView' ctg.id %}"> <span>
+                                        {{ ctg }}</span>
+
+                                    </span></a></li>
+
+                            {% endfor %}
+                        </ul>
+
+                    </li>
+
+
+                    <!-- {% endblock %} -->
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+
+
+
+
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'register' %}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <hr>
+    <div class="big-container bg-dark mt-5 mt-md-2" style="width: 100%;">
+        <div class="container-fluid  mb-4">
+            <div class="row">
+                <div class="col-lg-8"></div>
+                <div class="col-lg-4 ">
+                    <li class="nav-item search" style="list-style: none;margin-left: 20px;">
+                        <!-- <a class="nav-link" href="{% url 'wonItems' %}">Won Items <span style="color: cadetblue;">
+                                    </span></a> -->
+                        <form action="{% url 'search' %}" method="get">
+                            <input type="text" class="form-controls p-2 mb-2 rounded-pill" name="key" id=""
+                                placeholder="Search items">
+                            <input type="submit" class="btn btn-lg" name="" id="" value="Search"
+                                style="background-color: brown;color: white;">
+                        </form>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block body %}
+    {% endblock %}
+    <!-- <div class="footer"></div> -->
+
+
+    <footer class="footer postition-absolute p-3">
+        <div class="container text-center text-light">
+            <p class="lead">Copyright &copy; 2024 Django</p>
+
+            {% if user.is_authenticated %}
+            Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+            Not signed in.
+            {% endif %}
+        </div>
+
+    </footer>
+</body>
+
+
+</html>
