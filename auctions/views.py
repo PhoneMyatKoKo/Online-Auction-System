@@ -252,7 +252,7 @@ def closeAuction(request,pk):
 def postedItems(request):
    pk=request.user.id
    listing=Listings.objects.filter(creator_id=pk)
-   context={"listing":listing,'media_url':settings.MEDIA_URL}
+   context={"listings":listing,'media_url':settings.MEDIA_URL}
    return render(request,'auctions/postedListing.html',context)
 
 def wonItems(request):
@@ -302,7 +302,7 @@ def send_email(request,winner,item):
    link='http://'+str(request.META['HTTP_HOST'])+'/listingDetail/'+str(item.pk)
    body=f'You have won the auction for {item}, Visit this link {link}'
    receiver=winner.email+""
-   django.core.mail.send_mail("Congratulations "+winner.username,body,"phonemyatkoko_ph@cmu.ac.th",[receiver],False)
+   django.core.mail.send_mail("Congratulations "+winner.username,body,"phonemyatkoko_ph@cmu.ac.th",[receiver],True)
    
    
             

@@ -4,7 +4,7 @@
 <h2 style="text-align: center;">Your Listings</h2>
 
 {% for list in listings %}
-{% if list.status %}
+
 <div style="margin: 30px;border-bottom: 3px solid black;" class="listing text-dark d-flex-column d-md-inline-flex">
     <div class="img"><a href="{% url 'detail' list.id %}"><img src="{{ media_url }}{{ list.image }}" alt=""
                 width="300px" style="display:inline;margin-right: 10px;margin-bottom: 20px;" height="250px"></a></div>
@@ -19,7 +19,7 @@
     </div>
 
 </div>
-{% endif %}
+
 
 {% endfor %}
 {% endblock %}
